@@ -7,7 +7,7 @@
     
     <style>
         /* פונטים שמחים ומעוגלים */
-        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Assistant:wght@400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Assistant:wght@400;700;800;900&display=swap');
 
         :root {
             --primary-color: #2d3436;
@@ -16,6 +16,10 @@
             --anniversary-color: #6BCB77; /* ירוק רענן */
             --bg-color: #FFF9F0;
             --bubble-bg: #8B0000; /* אדום כהה לבועה */
+            
+            /* צבעי כותרת חדשים */
+            --header-gradient: linear-gradient(135deg, #ff6b6b, #ff9f43);
+            --month-color: #2c3e50;
         }
 
         body { 
@@ -71,11 +75,6 @@
             animation: bounceTilt 0.8s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
 
-        @keyframes bounceTilt {
-            from { transform: translateY(0) rotate(0deg) scale(1); }
-            to { transform: translateY(-25px) rotate(-15deg) scale(1.1); }
-        }
-
         .loading-text-container {
             font-weight: 700;
             color: var(--birthday-color);
@@ -90,6 +89,37 @@
             margin-bottom: 50px;
         }
 
+        /* כותרת דינמית מחולקת ל-2 שורות עם צבעים משופרים */
+        .main-header-container {
+            text-align: center;
+            margin-bottom: 45px;
+            padding: 0 20px;
+        }
+
+        .header-line-top {
+            display: block;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            /* שימוש במדרג צבעים יפה */
+            background: var(--header-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.05));
+        }
+
+        .header-line-bottom {
+            display: block;
+            font-size: 56px;
+            color: var(--month-color);
+            font-weight: 900; /* עובי מקסימלי */
+            font-family: 'Assistant', sans-serif;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            text-shadow: 2px 2px 0px rgba(255, 217, 61, 0.3); /* צל עדין בצהוב */
+        }
+
         .section-title { 
             font-size: 32px; 
             margin-bottom: 30px;
@@ -99,11 +129,6 @@
             display: inline-block;
             width: 100%;
             font-weight: 800;
-        }
-
-        .section-title::after {
-            content: '✨';
-            margin-right: 10px;
         }
 
         #today-alert {
@@ -149,8 +174,6 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border: 2px solid transparent;
-            word-wrap: break-word;
-            overflow: hidden;
         }
 
         .event-card:hover {
@@ -195,11 +218,10 @@
         .birthday-card .e-date { color: var(--birthday-color); background: #fff5f5; }
         .anniversary-card .e-date { color: var(--anniversary-color); background: #f0fff4; }
 
-        /* הבועה הנפתחת - עיצוב אדום כהה */
         .info-bubble {
             position: absolute;
-            background: var(--bubble-bg); /* רקע אדום כהה */
-            color: white; /* טקסט לבן */
+            background: var(--bubble-bg);
+            color: white;
             padding: 12px 18px;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
@@ -213,7 +235,6 @@
             border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* חץ קטן לבועה בצבע אדום כהה */
         .info-bubble::after {
             content: '';
             position: absolute;
@@ -227,28 +248,11 @@
 
         .hidden { display: none !important; }
         
-        /* התאמות למובייל */
         @media (max-width: 600px) {
+            .header-line-top { font-size: 20px; }
+            .header-line-bottom { font-size: 42px; }
             .section-title { font-size: 26px; }
-            .event-grid { 
-                grid-template-columns: 1fr 1fr; 
-                gap: 12px;
-                width: 100%;
-            }
-            .event-card {
-                padding: 12px;
-            }
-            .event-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 26px;
-            }
-            .e-name {
-                font-size: 16px;
-            }
-            .today-content {
-                font-size: 22px;
-            }
+            .event-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -265,9 +269,12 @@
         </div>
     </div>
 
-    <!-- Birthday Section -->
+    <!-- Main Section -->
     <div id="birthday-section" class="events-section hidden">
-        <h2 id="main-dynamic-title" class="section-title">טוען כותרת...</h2>
+        <div class="main-header-container">
+            <span class="header-line-top">ימי הולדת ונישואין</span>
+            <span id="dynamic-month-line" class="header-line-bottom">טוען...</span>
+        </div>
         
         <div id="today-alert" class="hidden">
             <span class="today-label">🥳 חוגגים היום:</span>
@@ -279,7 +286,7 @@
 
     <!-- Anniversary Section -->
     <div id="anniversary-section" class="events-section hidden">
-        <h2 class="section-title">ימי נישואין</h2>
+        <h2 class="section-title">ימי נישואין ✨</h2>
         <div id="anniversary-grid" class="event-grid"></div>
     </div>
 
@@ -322,27 +329,23 @@
             const anniversaryGrid = document.getElementById('anniversary-grid');
             const todayAlert = document.getElementById('today-alert');
             const todayContent = document.getElementById('today-content');
-            const mainDynamicTitle = document.getElementById('main-dynamic-title');
+            const monthLine = document.getElementById('dynamic-month-line');
 
             let hasBirthdays = false;
             let hasAnniversaries = false;
 
-            // שורה ראשונה ב-JSON (אינדקס 0) מכילה את הנתונים של חוגגי היום
             const firstRow = items[0];
             const firstRowKeys = Object.keys(firstRow);
             const todayCol1 = (firstRow[firstRowKeys[0]] || "").toString().trim();
             const todayCol2 = (firstRow[firstRowKeys[1]] || "").toString().trim();
 
-            // שורה שנייה ב-JSON (אינדקס 1) מכילה את הכותרת הדינמית
             if (items[1]) {
                 const secondRow = items[1];
                 const secondRowKeys = Object.keys(secondRow);
-                const dynamicTitle = (secondRow[secondRowKeys[0]] || "").toString().trim();
-                if (dynamicTitle) {
-                    mainDynamicTitle.innerText = dynamicTitle;
-                } else {
-                    mainDynamicTitle.innerText = "ימי הולדת";
-                }
+                let fullTitle = (secondRow[secondRowKeys[0]] || "").toString().trim();
+                
+                let cleanedTitle = fullTitle.replace("ימי הולדת ונישואין", "").replace("-", "").trim();
+                monthLine.innerText = cleanedTitle || "חודש נוכחי";
             }
 
             let finalTodayText = "";
@@ -361,7 +364,6 @@
                 todayAlert.classList.remove('hidden');
             }
 
-            // נתוני האירועים מתחילים משורה שלישית (אינדקס 2) והלאה
             const dataToProcess = items.slice(2);
             dataToProcess.forEach((item, index) => {
                 const keys = Object.keys(item);
@@ -370,7 +372,6 @@
                 const date = (item[keys[2]] || "").toString().trim();
                 const desc = (item[keys[3]] || "").toString().trim();
 
-                // סינון שורות ריקות או כותרות עמודות אם קיימות בטעות
                 if (name === "שם" || name === "שם חתן וכלה" || name === "" || name === todayCol1 || name === todayCol2) return;
 
                 const isAnniversary = type.includes('נישואין');
@@ -423,7 +424,6 @@
             bubble.style.left = (rect.left + window.scrollX + (rect.width / 2) - (bubbleWidth / 2)) + 'px';
             bubble.style.top = (rect.top + window.scrollY - bubbleHeight - 15) + 'px';
 
-            // הבועה נעלמת אחרי שנייה אחת בדיוק
             bubbleTimeout = setTimeout(() => { hideBubble(); }, 1000);
         }
 
