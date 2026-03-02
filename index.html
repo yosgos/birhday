@@ -6,230 +6,312 @@
     <title>אירועים משפחתיים - משפחת בלוי</title>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Frank+Ruhl+Libre:wght@700&display=swap');
+        /* פונטים שמחים ומעוגלים */
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Assistant:wght@400;700;800&display=swap');
 
         :root {
             --primary-color: #2d3436;
-            --accent-color: #d4af37;
-            --birthday-color: #d63031; 
-            --anniversary-color: #6c5ce7; 
-            --bg-color: #f9f9fb;
-            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
-            --card-shadow-hover: 0 15px 30px rgba(214, 48, 49, 0.1);
+            --accent-color: #FFD93D; /* צהוב שמש */
+            --birthday-color: #FF6B6B; /* ורוד חזק */
+            --anniversary-color: #6BCB77; /* ירוק רענן */
+            --bg-color: #FFF9F0;
         }
 
         body { 
-            font-family: 'Assistant', sans-serif; 
-            background: var(--bg-color);
+            font-family: 'Varela Round', 'Assistant', sans-serif; 
             margin: 0; 
+            min-height: 100vh;
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             color: var(--primary-color);
             padding: 40px 0;
+            background-color: var(--bg-color);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM37 7c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm61 59c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM82 45c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM53 2c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm30 82c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM4 52c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm14 35c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm71-35c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-9-14c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-54 2c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-7 13c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm58 33c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffd93d' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            overflow-x: hidden;
         }
 
-        #today-alert {
-            width: 90%;
-            max-width: 650px;
-            background: #ffffff;
-            border-right: 5px solid var(--accent-color);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 0 auto 30px auto;
-            text-align: center;
-            box-shadow: var(--card-shadow);
-        }
-
-        #today-alert .today-label {
-            display: block;
-            font-size: 11px;
-            letter-spacing: 1px;
-            color: var(--accent-color);
-            margin-bottom: 8px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        #today-alert .today-content {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--primary-color);
-            line-height: 1.4;
-        }
-
-        .today-divider {
-            margin: 0 10px;
-            color: var(--accent-color);
-            font-weight: 300;
-        }
-
-        .events-section {
-            width: 100%;
-            padding: 10px 0; 
+        #loading { 
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            height: 60vh;
+        }
+        
+        .loader-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
-        .events-container { 
-            width: 95%; 
-            max-width: 1100px; 
-            text-align: center; 
+        .loader-bg-circle {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 217, 61, 0.2);
+            border-radius: 50%;
+            animation: pulseBg 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseBg {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .loader-icon {
+            font-size: 60px;
+            z-index: 2;
+            display: inline-block;
+            animation: bounceTilt 0.8s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        @keyframes bounceTilt {
+            from { transform: translateY(0) rotate(0deg) scale(1); }
+            to { transform: translateY(-25px) rotate(-15deg) scale(1.1); }
+        }
+
+        .loading-text-container {
+            font-weight: 700;
+            color: var(--birthday-color);
+            font-size: 1.2rem;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .events-section {
+            width: 90%;
+            max-width: 1000px;
+            margin-bottom: 50px;
         }
 
         .section-title { 
-            font-family: 'Frank Ruhl Libre', serif; 
-            font-size: 38px; 
+            font-size: 36px; 
             margin-bottom: 30px;
+            color: var(--primary-color);
+            text-align: center;
             position: relative;
             display: inline-block;
-            color: var(--primary-color);
+            width: 100%;
         }
 
         .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: var(--accent-color);
-            border-radius: 2px;
+            content: '✨';
+            margin-right: 10px;
+        }
+
+        #today-alert {
+            background: white;
+            border-radius: 30px;
+            padding: 25px;
+            margin: 0 auto 40px auto;
+            text-align: center;
+            box-shadow: 0 10px 0px var(--accent-color);
+            border: 3px solid var(--accent-color);
+            max-width: 500px;
+            transform: rotate(-1deg);
+        }
+
+        .today-label {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ff9f43;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .today-content {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-color);
         }
 
         .event-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 24px;
-            padding: 20px;
+            /* שינוי כאן: הבטחת לפחות 2 במינימום וגודל דינמי במקסימום */
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
         }
 
         .event-card {
-            background: #ffffff;
-            padding: 20px;
+            background: white;
+            padding: 15px;
             border-radius: 20px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 18px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(0,0,0,0.02);
-            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            word-wrap: break-word;
+            overflow: hidden;
         }
 
         .event-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--card-shadow-hover);
+            transform: scale(1.03) rotate(1deg);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
+
+        .birthday-card { cursor: pointer; }
+        .anniversary-card { cursor: default; }
+
+        .birthday-card:hover { border-color: var(--birthday-color); }
+        .anniversary-card:hover { border-color: var(--anniversary-color); }
 
         .event-icon {
             font-size: 32px;
+            margin-bottom: 10px;
             background: #f8f9fa;
             width: 60px;
             height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 15px;
+            border-radius: 50%;
         }
-        
-        .e-info { text-align: right; }
-        .e-name { font-weight: 700; font-size: 19px; display: block; color: var(--primary-color); margin-bottom: 4px; }
-        .e-date { font-size: 15px; font-weight: 600; }
 
-        .birthday-card .event-icon { color: var(--birthday-color); background: #fffafa; border: 1px solid #ffebeb; }
-        .anniversary-card .event-icon { color: var(--anniversary-color); background: #f5f5ff; border: 1px solid #eeeeff; }
-        .birthday-card .e-date { color: var(--birthday-color); }
-        .anniversary-card .e-date { color: var(--anniversary-color); }
+        .e-name { 
+            font-weight: 800; 
+            font-size: 18px; 
+            color: var(--primary-color); 
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .e-date { 
+            font-size: 14px; 
+            font-weight: 700; 
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: #f1f2f6;
+        }
+
+        .birthday-card .e-date { color: var(--birthday-color); background: #fff5f5; }
+        .anniversary-card .e-date { color: var(--anniversary-color); background: #f0fff4; }
 
         .info-bubble {
             position: absolute;
             background: white;
-            padding: 15px 25px;
+            color: var(--primary-color);
+            padding: 15px 20px;
             border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            z-index: 1000;
-            max-width: 260px;
-            font-size: 18px; 
-            font-weight: 600;
-            line-height: 1.4;
-            color: #444;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             border: 2px solid var(--accent-color);
+            z-index: 1000;
+            font-size: 16px; 
+            font-weight: 700;
             display: none;
+            pointer-events: none;
             text-align: center;
-            animation: bubblePop 0.2s ease-out;
+            max-width: 80vw;
         }
 
         .info-bubble::after {
             content: '';
             position: absolute;
-            bottom: -12px;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 12px solid var(--accent-color);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid var(--accent-color);
         }
 
-        @keyframes bubblePop {
-            from { opacity: 0; transform: scale(0.9) translateY(5px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+        .hidden { display: none !important; }
+        
+        /* התאמות למובייל */
+        @media (max-width: 600px) {
+            .section-title { font-size: 26px; }
+            .event-grid { 
+                /* 2 קוביות בשורה */
+                grid-template-columns: 1fr 1fr; 
+                gap: 12px;
+                width: 100%;
+            }
+            .event-card {
+                padding: 12px;
+            }
+            .event-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 26px;
+            }
+            .e-name {
+                font-size: 16px;
+            }
+            .today-content {
+                font-size: 22px;
+            }
         }
-
-        @keyframes fadeOut {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(0.9) translateY(-5px); }
-        }
-
-        #loading { padding: 40px; font-weight: bold; color: var(--accent-color); font-size: 1.2rem; }
-        .hidden { display: none; }
     </style>
 </head>
 <body onclick="hideBubble()">
 
-    <div id="loading">מעדכן אירועים משפחתיים...</div>
-
-    <div id="birthday-section" class="events-section hidden">
-        <div class="events-container">
-            <h2 class="section-title">ימי הולדת</h2>
-            
-            <div id="today-alert" class="hidden">
-                <span class="today-label">חוגגים היום</span>
-                <div class="today-content" id="today-content"></div>
-            </div>
-
-            <div id="birthday-grid" class="event-grid"></div>
+    <!-- Happy Loader המשודרג -->
+    <div id="loading">
+        <div class="loader-wrapper">
+            <div class="loader-bg-circle"></div>
+            <div class="loader-icon">🥳</div>
+        </div>
+        <div class="loading-text-container">
+            טוען נתונים<span id="loading-dots"></span>
         </div>
     </div>
 
-    <div id="anniversary-section" class="events-section hidden">
-        <div class="events-container">
-            <h2 class="section-title">ימי נישואין</h2>
-            <div id="anniversary-grid" class="event-grid"></div>
+    <!-- Birthday Section -->
+    <div id="birthday-section" class="events-section hidden">
+        <h2 class="section-title">ימי הולדת</h2>
+        
+        <div id="today-alert" class="hidden">
+            <span class="today-label">🥳 חוגגים היום:</span>
+            <div class="today-content" id="today-content"></div>
         </div>
+
+        <div id="birthday-grid" class="event-grid"></div>
+    </div>
+
+    <!-- Anniversary Section -->
+    <div id="anniversary-section" class="events-section hidden">
+        <h2 class="section-title">ימי נישואין</h2>
+        <div id="anniversary-grid" class="event-grid"></div>
     </div>
 
     <div id="info-bubble" class="info-bubble"></div>
 
     <script>
         const API_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AY5xjrSJlmYdtljgAGMIRRyHV06oHlFbjUoVMqmyjgmHNfqRNNqWGSCTAAeZxHeU_A4NqmGS42fc-wwsGAVgc0oUBxd8YhLRYAlLCFqU5QuwPdeNsepHDuHRUUndCPYpuDVIAQurzWhZxTL8tvfKaxtytfO2ZIEpYqLE1sTO7xPDt-2BJ5B4gci0NRh2cD9YxkpdoLhvtSrQIGiUjbQJp3Uq0pVJu4geeQDr5NfpjlsBoRVizfGwGC1ykJOituOStHHhhmdK6aD28EtdufffkPI6Wl6kJIsVww&lib=MKvnEb8OzXBIaQxFnaeDEdJl9ogoAk9d_';
-
-        const birthdayEmojis = ['🧁', '🎂', '🎈', '🎁', '🥳', '🥧', '🎊', '🍰', '🍪', '✨'];
-        
+        const birthdayEmojis = ['🍰', '🎂', '🎈', '🎁', '🥳', '🧁', '🎊', '✨', '🍭', '🌈'];
         let bubbleTimeout;
+        let dotsInterval;
+
+        function startLoadingDots() {
+            const dotsSpan = document.getElementById('loading-dots');
+            let dotsCount = 0;
+            dotsInterval = setInterval(() => {
+                dotsCount = (dotsCount + 1) % 4;
+                dotsSpan.innerText = '.'.repeat(dotsCount);
+            }, 400); 
+        }
 
         async function fetchEvents() {
+            startLoadingDots();
             try {
                 const response = await fetch(API_URL, { redirect: 'follow' });
                 const data = await response.json();
                 const items = Array.isArray(data) ? data : (data.data || []);
                 if (items.length > 0) processItems(items);
+                
+                clearInterval(dotsInterval);
                 document.getElementById('loading').classList.add('hidden');
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('loading').innerText = 'משהו השתבש בטעינה.';
+                clearInterval(dotsInterval);
+                document.getElementById('loading').innerHTML = '<div class="loading-text-container" style="color:red">אופס! משהו לא עבד בטעינה.</div>';
             }
         }
 
@@ -244,7 +326,6 @@
 
             const firstRow = items[0];
             const firstRowKeys = Object.keys(firstRow);
-            
             const todayCol1 = (firstRow[firstRowKeys[0]] || "").toString().trim();
             const todayCol2 = (firstRow[firstRowKeys[1]] || "").toString().trim();
 
@@ -252,7 +333,7 @@
             const isValid = (txt) => txt && txt !== "" && txt !== "שם" && txt !== "שם חתן וכלה";
 
             if (isValid(todayCol1) && isValid(todayCol2)) {
-                finalTodayText = `<span>${todayCol1}</span> <span class="today-divider">|</span> <span>${todayCol2}</span>`;
+                finalTodayText = `<span>${todayCol1}</span> <span style="color:#FF6B6B">♥</span> <span>${todayCol2}</span>`;
             } else if (isValid(todayCol1)) {
                 finalTodayText = todayCol1;
             } else if (isValid(todayCol2)) {
@@ -265,7 +346,6 @@
             }
 
             const dataToProcess = items.slice(1);
-
             dataToProcess.forEach((item, index) => {
                 const keys = Object.keys(item);
                 const name = (item[keys[0]] || "").toString().trim();
@@ -276,7 +356,6 @@
                 if (name === "שם" || name === "שם חתן וכלה" || name === "" || name === todayCol1 || name === todayCol2) return;
 
                 const isAnniversary = type.includes('נישואין');
-
                 if (isAnniversary) {
                     anniversaryGrid.innerHTML += createCard(name, date, 'anniversary', "", index);
                     hasAnniversaries = true;
@@ -298,16 +377,13 @@
             const isBirthday = category === 'birthday';
             const icon = isBirthday ? birthdayEmojis[index % birthdayEmojis.length] : '🥂';
             const cardClass = isBirthday ? 'birthday-card' : 'anniversary-card';
-            
             const onClickAction = (isBirthday && desc) ? `onclick="showBubble(event, '${desc.replace(/'/g, "\\'")}')"` : "";
             
             return `
                 <div class="event-card ${cardClass}" ${onClickAction}>
                     <div class="event-icon">${icon}</div>
-                    <div class="e-info">
-                        <span class="e-name">${name}</span>
-                        <div class="e-date">${date}</div>
-                    </div>
+                    <span class="e-name">${name}</span>
+                    <div class="e-date">${date}</div>
                 </div>
             `;
         }
@@ -322,7 +398,6 @@
             
             bubble.innerText = desc;
             bubble.style.display = 'block';
-            bubble.style.animation = 'bubblePop 0.2s ease-out';
             
             const bubbleWidth = bubble.offsetWidth;
             const bubbleHeight = bubble.offsetHeight;
@@ -330,17 +405,13 @@
             bubble.style.left = (rect.left + window.scrollX + (rect.width / 2) - (bubbleWidth / 2)) + 'px';
             bubble.style.top = (rect.top + window.scrollY - bubbleHeight - 15) + 'px';
 
-            // שינוי ל-1000 מילי-שניות (שנייה אחת)
-            bubbleTimeout = setTimeout(() => {
-                hideBubble();
-            }, 1000);
+            bubbleTimeout = setTimeout(() => { hideBubble(); }, 3500);
         }
 
         function hideBubble() {
             const bubble = document.getElementById('info-bubble');
             if (bubble.style.display === 'block') {
-                bubble.style.animation = 'fadeOut 0.2s ease forwards';
-                setTimeout(() => { bubble.style.display = 'none'; }, 200);
+                bubble.style.display = 'none';
             }
         }
 
