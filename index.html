@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אירועים משפחתיים - משפחת בלוי</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Frank+Ruhl+Libre:wght@700&display=swap');
+
+        :root {
+            --primary-color: #2d3436;
+            --accent-color: #d4af37;
+            --birthday-color: #d63031; 
+            --anniversary-color: #6c5ce7; 
+            --bg-color: #f9f9fb;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+            --card-shadow-hover: 0 15px 30px rgba(214, 48, 49, 0.1);
+        }
+
+        body { 
+            font-family: 'Assistant', sans-serif; 
+            background: var(--bg-color);
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            color: var(--primary-color);
+            padding: 40px 0;
+        }
+
+        #today-alert {
+            width: 90%;
+            max-width: 650px;
+            background: #ffffff;
+            border-right: 5px solid var(--accent-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 0 auto 30px auto;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        #today-alert .today-label {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        #today-alert .today-content {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1.4;
+        }
+
+        .today-divider {
+            margin: 0 10px;
+            color: var(--accent-color);
+            font-weight: 300;
+        }
+
+        .events-section {
+            width: 100%;
+            padding: 10px 0; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .events-container { 
+            width: 95%; 
+            max-width: 1100px; 
+            text-align: center; 
+        }
+
+        .section-title { 
+            font-family: 'Frank Ruhl Libre', serif; 
+            font-size: 38px; 
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+            color: var(--primary-color);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+            padding: 20px;
+        }
+
+        .event-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .event-icon {
+            font-size: 32px;
+            background: #f8f9fa;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+        
+        .e-info { text-align: right; }
+        .e-name { font-weight: 700; font-size: 19px; display: block; color: var(--primary-color); margin-bottom: 4px; }
+        .e-date { font-size: 15px; font-weight: 600; }
+
+        .birthday-card .event-icon { color: var(--birthday-color); background: #fffafa; border: 1px solid #ffebeb; }
+        .anniversary-card .event-icon { color: var(--anniversary-color); background: #f5f5ff; border: 1px solid #eeeeff; }
+        .birthday-card .e-date { color: var(--birthday-color); }
+        .anniversary-card .e-date { color: var(--anniversary-color); }
+
+        .info-bubble {
+            position: absolute;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            z-index: 1000;
+            max-width: 260px;
+            font-size: 18px; 
+            font-weight: 600;
+            line-height: 1.4;
+            color: #444;
+            border: 2px solid var(--accent-color);
+            display: none;
+            text-align: center;
+            animation: bubblePop 0.2s ease-out;
+        }
+
+        .info-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 12px solid var(--accent-color);
+        }
+
+        @keyframes bubblePop {
+            from { opacity: 0; transform: scale(0.9) translateY(5px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.9) translateY(-5px); }
+        }
+
+        #loading { padding: 40px; font-weight: bold; color: var(--accent-color); font-size: 1.2rem; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body onclick="hideBubble()">
+
+    <div id="loading">מעדכן אירועים משפחתיים...</div>
+
+    <div id="birthday-section" class="events-section hidden">
+        <div class="events-container">
+            <h2 class="section-title">ימי הולדת</h2>
+            
+            <div id="today-alert" class="hidden">
+                <span class="today-label">חוגגים היום</span>
+                <div class="today-content" id="today-content"></div>
+            </div>
+
+            <div id="birthday-grid" class="event-grid"></div>
+        </div>
+    </div>
+
+    <div id="anniversary-section" class="events-section hidden">
+        <div class="events-container">
+            <h2 class="section-title">ימי נישואין</h2>
+            <div id="anniversary-grid" class="event-grid"></div>
+        </div>
+    </div>
+
+    <div id="info-bubble" class="info-bubble"></div>
+
+    <script>
+        const API_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AY5xjrSJlmYdtljgAGMIRRyHV06oHlFbjUoVMqmyjgmHNfqRNNqWGSCTAAeZxHeU_A4NqmGS42fc-wwsGAVgc0oUBxd8YhLRYAlLCFqU5QuwPdeNsepHDuHRUUndCPYpuDVIAQurzWhZxTL8tvfKaxtytfO2ZIEpYqLE1sTO7xPDt-2BJ5B4gci0NRh2cD9YxkpdoLhvtSrQIGiUjbQJp3Uq0pVJu4geeQDr5NfpjlsBoRVizfGwGC1ykJOituOStHHhhmdK6aD28EtdufffkPI6Wl6kJIsVww&lib=MKvnEb8OzXBIaQxFnaeDEdJl9ogoAk9d_';
+
+        const birthdayEmojis = ['🧁', '🎂', '🎈', '🎁', '🥳', '🥧', '🎊', '🍰', '🍪', '✨'];
+        
+        let bubbleTimeout;
+
+        async function fetchEvents() {
+            try {
+                const response = await fetch(API_URL, { redirect: 'follow' });
+                const data = await response.json();
+                const items = Array.isArray(data) ? data : (data.data || []);
+                if (items.length > 0) processItems(items);
+                document.getElementById('loading').classList.add('hidden');
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').innerText = 'משהו השתבש בטעינה.';
+            }
+        }
+
+        function processItems(items) {
+            const birthdayGrid = document.getElementById('birthday-grid');
+            const anniversaryGrid = document.getElementById('anniversary-grid');
+            const todayAlert = document.getElementById('today-alert');
+            const todayContent = document.getElementById('today-content');
+
+            let hasBirthdays = false;
+            let hasAnniversaries = false;
+
+            const firstRow = items[0];
+            const firstRowKeys = Object.keys(firstRow);
+            
+            const todayCol1 = (firstRow[firstRowKeys[0]] || "").toString().trim();
+            const todayCol2 = (firstRow[firstRowKeys[1]] || "").toString().trim();
+
+            let finalTodayText = "";
+            const isValid = (txt) => txt && txt !== "" && txt !== "שם" && txt !== "שם חתן וכלה";
+
+            if (isValid(todayCol1) && isValid(todayCol2)) {
+                finalTodayText = `<span>${todayCol1}</span> <span class="today-divider">|</span> <span>${todayCol2}</span>`;
+            } else if (isValid(todayCol1)) {
+                finalTodayText = todayCol1;
+            } else if (isValid(todayCol2)) {
+                finalTodayText = todayCol2;
+            }
+
+            if (finalTodayText) {
+                todayContent.innerHTML = finalTodayText;
+                todayAlert.classList.remove('hidden');
+            }
+
+            const dataToProcess = items.slice(1);
+
+            dataToProcess.forEach((item, index) => {
+                const keys = Object.keys(item);
+                const name = (item[keys[0]] || "").toString().trim();
+                const type = (item[keys[1]] || "").toString().trim();
+                const date = (item[keys[2]] || "").toString().trim();
+                const desc = (item[keys[3]] || "").toString().trim();
+
+                if (name === "שם" || name === "שם חתן וכלה" || name === "" || name === todayCol1 || name === todayCol2) return;
+
+                const isAnniversary = type.includes('נישואין');
+
+                if (isAnniversary) {
+                    anniversaryGrid.innerHTML += createCard(name, date, 'anniversary', "", index);
+                    hasAnniversaries = true;
+                } else {
+                    birthdayGrid.innerHTML += createCard(name, date, 'birthday', desc, index);
+                    hasBirthdays = true;
+                }
+            });
+
+            if (hasBirthdays || !todayAlert.classList.contains('hidden')) {
+                document.getElementById('birthday-section').classList.remove('hidden');
+            }
+            if (hasAnniversaries) {
+                document.getElementById('anniversary-section').classList.remove('hidden');
+            }
+        }
+
+        function createCard(name, date, category, desc, index) {
+            const isBirthday = category === 'birthday';
+            const icon = isBirthday ? birthdayEmojis[index % birthdayEmojis.length] : '🥂';
+            const cardClass = isBirthday ? 'birthday-card' : 'anniversary-card';
+            
+            const onClickAction = (isBirthday && desc) ? `onclick="showBubble(event, '${desc.replace(/'/g, "\\'")}')"` : "";
+            
+            return `
+                <div class="event-card ${cardClass}" ${onClickAction}>
+                    <div class="event-icon">${icon}</div>
+                    <div class="e-info">
+                        <span class="e-name">${name}</span>
+                        <div class="e-date">${date}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showBubble(event, desc) {
+            event.stopPropagation();
+            const bubble = document.getElementById('info-bubble');
+            const card = event.currentTarget;
+            const rect = card.getBoundingClientRect();
+            
+            if (bubbleTimeout) clearTimeout(bubbleTimeout);
+            
+            bubble.innerText = desc;
+            bubble.style.display = 'block';
+            bubble.style.animation = 'bubblePop 0.2s ease-out';
+            
+            const bubbleWidth = bubble.offsetWidth;
+            const bubbleHeight = bubble.offsetHeight;
+            
+            bubble.style.left = (rect.left + window.scrollX + (rect.width / 2) - (bubbleWidth / 2)) + 'px';
+            bubble.style.top = (rect.top + window.scrollY - bubbleHeight - 15) + 'px';
+
+            // שינוי ל-1000 מילי-שניות (שנייה אחת)
+            bubbleTimeout = setTimeout(() => {
+                hideBubble();
+            }, 1000);
+        }
+
+        function hideBubble() {
+            const bubble = document.getElementById('info-bubble');
+            if (bubble.style.display === 'block') {
+                bubble.style.animation = 'fadeOut 0.2s ease forwards';
+                setTimeout(() => { bubble.style.display = 'none'; }, 200);
+            }
+        }
+
+        window.onload = fetchEvents;
+    </script>
+</body>
+</html>
